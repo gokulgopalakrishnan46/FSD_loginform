@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./emp-backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000"
+    volumes:
+      - ./emp-backend:/app 
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mysql 
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=employeeDB
+    depends_on:
+      - mysql
+
+  frontend:
+    build:
+      context: ./emp-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173" 
+    volumes:
+      - ./emp-frontend:/app
+    environment:
+      - NODE_ENV=development
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: employeeDB
+    ports:
+      - "3306"
+    volumes:
+      - mysql-data:/var/lib/mysql 
+volumes:
+  mysql-data: 
